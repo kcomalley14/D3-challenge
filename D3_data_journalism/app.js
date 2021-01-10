@@ -29,41 +29,41 @@ d3.csv("data.csv").then(function(allData) {
       data.obesity = +data.obesity;
     });
 
-    // // Step 2: Create scale functions
-    // // ==============================
-    // var xLinearScale = d3.scaleLinear()
-    //   .domain([20, d3.max(hairData, d => d.hair_length)])
-    //   .range([0, width]);
+    // Step 2: Create scale functions
+    // ==============================
+    var xLinearScale = d3.scaleLinear()
+      .domain([20, d3.max(allData, d => d.poverty)])
+      .range([0, width]);
 
-    // var yLinearScale = d3.scaleLinear()
-    //   .domain([0, d3.max(hairData, d => d.num_hits)])
-    //   .range([height, 0]);
+    var yLinearScale = d3.scaleLinear()
+      .domain([0, d3.max(allData, d => d.obesity)])
+      .range([height, 0]);
 
-    // // Step 3: Create axis functions
-    // // ==============================
-    // var bottomAxis = d3.axisBottom(xLinearScale);
-    // var leftAxis = d3.axisLeft(yLinearScale);
+    // Step 3: Create axis functions
+    // ==============================
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
 
-    // // Step 4: Append Axes to the chart
-    // // ==============================
-    // chartGroup.append("g")
-    //   .attr("transform", `translate(0, ${height})`)
-    //   .call(bottomAxis);
+    // Step 4: Append Axes to the chart
+    // ==============================
+    chartGroup.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(bottomAxis);
 
-    // chartGroup.append("g")
-    //   .call(leftAxis);
+    chartGroup.append("g")
+      .call(leftAxis);
 
-    // // Step 5: Create Circles
-    // // ==============================
-    // var circlesGroup = chartGroup.selectAll("circle")
-    // .data(hairData)
-    // .enter()
-    // .append("circle")
-    // .attr("cx", d => xLinearScale(d.hair_length))
-    // .attr("cy", d => yLinearScale(d.num_hits))
-    // .attr("r", "15")
-    // .attr("fill", "pink")
-    // .attr("opacity", ".5");
+    // Step 5: Create Circles
+    // ==============================
+    var circlesGroup = chartGroup.selectAll("circle")
+    .data(allData)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xLinearScale(d.poverty))
+    .attr("cy", d => yLinearScale(d.obesity))
+    .attr("b", "15")
+    .attr("fill", "pink")
+    .attr("opacity", ".25");
 
     // // Step 6: Initialize tool tip
     // // ==============================
