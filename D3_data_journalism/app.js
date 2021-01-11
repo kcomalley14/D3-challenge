@@ -25,19 +25,21 @@ d3.csv("data.csv").then(function(allData) {
 
     // Step 1: Parse Data/Cast as numbers
     allData.forEach(function(data) {
-      data.poverty = +data.poverty;
+      data.income = +data.income;
       data.obesity = +data.obesity;
     });
 
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-      .domain([20, d3.max(allData, d => d.poverty)])
-      .range([0, width]);
+      .domain(d3.extent(allData, d => d.income))
+      .range([0, width])
+      .nice();
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(allData, d => d.obesity)])
-      .range([height, 0]);
+      .domain(d3.extent(allData, d => d.obesity))
+      .range([height, 0])
+      .nice();
 
     // Step 3: Create axis functions
     // ==============================
@@ -59,11 +61,25 @@ d3.csv("data.csv").then(function(allData) {
     .data(allData)
     .enter()
     .append("circle")
-    .attr("cx", d => xLinearScale(d.poverty))
+    .attr("cx", d => xLinearScale(d.income))
     .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", "15")
     .attr("fill", "blue")
     .attr("opacity", ".25");
+
+    chartGroup.append("g")
+      .selectAll("text")
+      .data(allData)
+      .enter()
+      .append("text")
+      .text(d => d.abbr)
+      .attr("x", d => xLinearScale(d.income))
+      .attr("y", d => yLinearScale(d.obesity))
+      .classed(".textStates", true)
+      .attr("fill", "white")
+      .attr("alignment-baseline", "central")
+      .attr("font-weight", "bold")
+      .attr("text-anchor", "middle");
 
     // Step 6: Initialize tool tip
     // ==============================
@@ -71,7 +87,7 @@ d3.csv("data.csv").then(function(allData) {
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`${d.state}<br>Poverty: ${d.poverty}<br>Obesity: ${d.obesity}`);
+        return (`${d.state}<br>Poverty: ${d.income}<br>Obesity: ${d.obesity}`);
       });
 
     // Step 7: Create tooltip in the chart
@@ -100,7 +116,7 @@ d3.csv("data.csv").then(function(allData) {
     chartGroup.append("text")
       .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
       .attr("class", "axisText")
-      .text("Poverty (%)");
+      .text("Household Income (Median)");
   }).catch(function(error) {
     console.log(error);
   });
