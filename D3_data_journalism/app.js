@@ -1,11 +1,11 @@
 var svgWidth = 960;
-var svgHeight = 500;
+var svgHeight = 600;
 
 var margin = {
   top: 20,
   right: 40,
-  bottom: 60,
-  left: 100
+  bottom: 50,
+  left: 50
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -64,8 +64,8 @@ d3.csv("data.csv").then(function(allData) {
     .attr("cx", d => xLinearScale(d.income))
     .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", "15")
-    .attr("fill", "blue")
-    .attr("opacity", ".25");
+    .attr("fill", "lightblue")
+    // .attr("opacity", ".5");
 
     chartGroup.append("g")
       .selectAll("text")
@@ -79,7 +79,13 @@ d3.csv("data.csv").then(function(allData) {
       .attr("fill", "white")
       .attr("alignment-baseline", "central")
       .attr("font-weight", "bold")
-      .attr("text-anchor", "middle");
+      .attr("text-anchor", "middle")
+      .on("mouseover", function(data){
+          tooltip.show(data, this);
+      })
+      .on("mouseout", function(data){
+          tooltip.hide(data, this);
+        });
 
     // Step 6: Initialize tool tip
     // ==============================
@@ -92,17 +98,19 @@ d3.csv("data.csv").then(function(allData) {
 
     // Step 7: Create tooltip in the chart
     // ==============================
-    chartGroup.call(toolTip);
+    circlesGroup.call(toolTip);
 
     // Step 8: Create event listeners to display and hide the tooltip
     // ==============================
-    circlesGroup.on("click", function(data) {
+    circlesGroup.on("mouseover", function(data) {
       toolTip.show(data, this);
     })
       // onmouseout event
       .on("mouseout", function(data, index) {
         toolTip.hide(data);
       });
+
+    
 
     // Create axes labels
     chartGroup.append("text")
