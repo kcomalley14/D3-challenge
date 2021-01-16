@@ -11,6 +11,7 @@
   
   body {
     /* Padding bottom by footer height */
+    padding-top: 20px;
     padding-bottom: 80px;
   }
   
